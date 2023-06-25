@@ -15,7 +15,7 @@ const blacklistedArray = [];
 // Define a route for checking the Luminous API version
 app.get('/api/version', (req, res) => {
   // Simulate the version retrieval
-  const version = '1.0.0';
+  const version = '1.2.0';
 
   res.json({ version });
 });
