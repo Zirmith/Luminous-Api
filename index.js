@@ -4,16 +4,16 @@ const port = 3000;
 
 // Array to store HWIDs
 const hwidArray = [];
-
+const whitelistedArray = [];
+const blacklistedArray = [];
 
 // Define a route for checking the Luminous API version
 app.get('/api/version', (req, res) => {
-    // Simulate the version retrieval
-    const version = '1.0.0';
-  
-    res.json({ version });
-  });
-  
+  // Simulate the version retrieval
+  const version = '1.0.0';
+
+  res.json({ version });
+});
 
 // Route to get all HWIDs
 app.get('/api/hwids', (req, res) => {
@@ -38,9 +38,14 @@ app.put('/api/hwids/whitelist', (req, res) => {
 
   if (hwid && hwidArray.includes(hwid)) {
     // Remove the HWID from the array if it's already blacklisted
-    const index = hwidArray.indexOf(hwid);
-    if (index > -1) {
-      hwidArray.splice(index, 1);
+    const blacklistIndex = blacklistedArray.indexOf(hwid);
+    if (blacklistIndex > -1) {
+      blacklistedArray.splice(blacklistIndex, 1);
+    }
+
+    // Add the HWID to the whitelist if it's not already whitelisted
+    if (!whitelistedArray.includes(hwid)) {
+      whitelistedArray.push(hwid);
     }
 
     res.json({ message: 'HWID whitelisted successfully.' });
@@ -55,9 +60,14 @@ app.put('/api/hwids/blacklist', (req, res) => {
 
   if (hwid && hwidArray.includes(hwid)) {
     // Remove the HWID from the array if it's already whitelisted
-    const index = hwidArray.indexOf(hwid);
-    if (index > -1) {
-      hwidArray.splice(index, 1);
+    const whitelistIndex = whitelistedArray.indexOf(hwid);
+    if (whitelistIndex > -1) {
+      whitelistedArray.splice(whitelistIndex, 1);
+    }
+
+    // Add the HWID to the blacklist if it's not already blacklisted
+    if (!blacklistedArray.includes(hwid)) {
+      blacklistedArray.push(hwid);
     }
 
     res.json({ message: 'HWID blacklisted successfully.' });
@@ -66,10 +76,26 @@ app.put('/api/hwids/blacklist', (req, res) => {
   }
 });
 
+// Route to check if a HWID is whitelisted or blacklisted
+app.get('/api/hwids/check/:hwid', (req, res) => {
+  const { hwid } = req.params;
+
+  if (hwid) {
+    if (whitelistedArray.includes(hwid)) {
+      res.json({ state: 'whitelisted' });
+    } else if (blacklistedArray.includes(hwid)) {
+      res.json({ state: 'blacklisted' });
+    } else {
+      res.json({ state: 'not_found' });
+    }
+  } else {
+    res.status(400).json({ error: 'Invalid HWID.' });
+  }
+});
 
 app.get("/", (req, res) => {
-    res.redirect('/api/version');
-})
+  res.redirect('/api/version');
+});
 
 // Start the server
 app.listen(port, () => {
