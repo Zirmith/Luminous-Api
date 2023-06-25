@@ -82,8 +82,10 @@ app.put('/api/hwids/blacklist', (req, res) => {
 });
 
 // Route to check if a HWID is whitelisted or blacklisted
-app.get('/api/hwids/check', (req, res) => {
-  const hwid = req.query.hwid;
+
+app.get('/api/hwids/check/:hwid', (req, res) => {
+  const hwid = req.params.hwid;
+  console.log(`Checking if HWID ${hwid} is whitelisted or blacklisted`)
 
   if (hwid) {
     if (whitelistedArray.includes(hwid)) {
@@ -97,6 +99,7 @@ app.get('/api/hwids/check', (req, res) => {
     res.status(400).json({ error: 'Invalid HWID.' });
   }
 });
+
 
 // Route to delete an HWID
 app.delete('/api/hwids/:hwid', (req, res) => {
