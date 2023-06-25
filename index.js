@@ -15,7 +15,7 @@ const blacklistedArray = [];
 // Define a route for checking the Luminous API version
 app.get('/api/version', (req, res) => {
   // Simulate the version retrieval
-  const version = '1.2.0';
+  const version = '1.2.2';
 
   res.json({ version });
 });
@@ -68,13 +68,14 @@ app.put('/api/hwids/blacklist', (req, res) => {
 
   if (hwid && hwidArray.includes(hwid)) {
     // Remove the HWID from the array if it's already whitelisted
-    const whitelistIndex = whitelistedArray.indexOf(hwid);
+    const whitelistIndex = whitelistedArray.findIndex(item => item.hwid === hwid);
     if (whitelistIndex > -1) {
       whitelistedArray.splice(whitelistIndex, 1);
     }
 
     // Add the HWID to the blacklist with reason, custom code, and staff name
-    if (!blacklistedArray.some(item => item.hwid === hwid)) {
+    const blacklistIndex = blacklistedArray.findIndex(item => item.hwid === hwid);
+    if (blacklistIndex === -1) {
       blacklistedArray.push({ hwid, reason, customCode, staffName });
     }
 
@@ -83,6 +84,7 @@ app.put('/api/hwids/blacklist', (req, res) => {
     res.status(400).json({ error: 'Invalid HWID or HWID not found.' });
   }
 });
+
 
 
 
