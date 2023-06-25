@@ -11,6 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 const hwidArray = [];
 const whitelistedArray = [];
 const blacklistedArray = [];
+const hwidAddedTimes = {};
 
 // Define a route for checking the Luminous API version
 app.get('/api/version', (req, res) => {
@@ -28,17 +29,34 @@ app.get('/api/hwids', (req, res) => {
 // Route to add a new HWID
 app.post('/api/hwids', (req, res) => {
   const { hwid } = req.body;
-  
+
   if (hwid && !hwidArray.includes(hwid)) {
     hwidArray.push(hwid);
+    hwidAddedTimes[hwid] = Date.now();
     res.json({ message: 'HWID added successfully.' });
+
+    // Automatically whitelist the HWID after 5 minutes
+    setTimeout(() => {
+      // Remove the HWID from the array if it's already blacklisted
+      const blacklistIndex = blacklistedArray.findIndex(item => item.hwid === hwid);
+      if (blacklistIndex > -1) {
+        blacklistedArray.splice(blacklistIndex, 1);
+      }
+
+      // Add the HWID to the whitelist if it's not already whitelisted
+      const whitelistIndex = whitelistedArray.findIndex(item => item.hwid === hwid);
+      if (whitelistIndex === -1) {
+        whitelistedArray.push({ hwid });
+      }
+
+      console.log(`HWID ${hwid} whitelisted automatically after 5 minutes.`);
+    }, 5 * 60 * 1000); // 5 minutes in milliseconds
   } else {
     res.status(400).json({ error: 'Invalid HWID or HWID already exists.' });
   }
 });
 
 // Route to whitelist a HWID
-
 app.put('/api/hwids/whitelist', (req, res) => {
   const { hwid } = req.body;
 
@@ -62,7 +80,6 @@ app.put('/api/hwids/whitelist', (req, res) => {
 });
 
 // Route to blacklist a HWID
-// Route to blacklist a HWID with reason, custom code, and staff name
 app.put('/api/hwids/blacklist', (req, res) => {
   const { hwid, reason, customCode, staffName } = req.body;
 
@@ -85,11 +102,7 @@ app.put('/api/hwids/blacklist', (req, res) => {
   }
 });
 
-
-
-
 // Route to check if a HWID is whitelisted or blacklisted
-
 app.get('/api/hwids/check', (req, res) => {
   const hwid = req.query.hwid;
 
@@ -110,16 +123,31 @@ app.get('/api/hwids/check', (req, res) => {
       res.json(response);
     } else {
       console.log('HWID not found:', hwid);
-      res.json({ state: 'not_found' });
+
+      // Calculate the remaining time until whitelisting
+      const addedTime = hwidAddedTimes[hwid];
+      if (addedTime) {
+        const currentTime = Date.now();
+        const elapsedTime = currentTime - addedTime;
+        const remainingTime = 5 * 60 * 1000 - elapsedTime; // 5 minutes in milliseconds
+
+        // Convert remaining time to minutes and seconds
+        const remainingMinutes = Math.floor(remainingTime / 60000);
+        const remainingSeconds = Math.floor((remainingTime % 60000) / 1000);
+
+        res.json({
+          state: 'not_found',
+          remainingTime: `${remainingMinutes} minutes ${remainingSeconds} seconds`,
+        });
+      } else {
+        res.json({ state: 'not_found', remainingTime: 'Unknown' });
+      }
     }
   } else {
     console.log('Invalid HWID');
     res.status(400).json({ error: 'Invalid HWID.' });
   }
 });
-
-
-
 
 // Route to delete an HWID
 app.delete('/api/hwids/:hwid', (req, res) => {
@@ -128,13 +156,14 @@ app.delete('/api/hwids/:hwid', (req, res) => {
   if (hwid && hwidArray.includes(hwid)) {
     const index = hwidArray.indexOf(hwid);
     hwidArray.splice(index, 1);
+    delete hwidAddedTimes[hwid];
     res.json({ message: 'HWID deleted successfully.' });
   } else {
     res.status(400).json({ error: 'Invalid HWID or HWID not found.' });
   }
 });
 
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   res.redirect('/api/version');
 });
 
