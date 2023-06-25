@@ -12,7 +12,7 @@ Luminous VR is an upcoming virtual reality application that aims to provide a se
 
 - **Advanced Interaction Tools:** Luminous VR will provide a set of advanced interaction tools, such as gesture recognition, hand tracking, and object manipulation, to enhance VR interactions and make them more natural and intuitive.
 
-- **Social Integration:** Connect with friends and other users through Luminous VR's built-in social features, including voice chat, messaging, and multiplayer support, to explore virtual worlds together and share memorable experiences.
+- **Social Integration:** Connect with friends and other users through Luminous VR's built-in social features, including voice chat, and messaging.
 
 ## Getting Started
 
