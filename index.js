@@ -27,8 +27,9 @@ app.get('/api/hwids', (req, res) => {
 
 // Route to add a new HWID
 app.post('/api/hwids', (req, res) => {
-  const { hwid } = req.body;
 
+  const { hwid } = req.body;
+  console.log(`Got a hwid of:  ${hwid}`)
   if (hwid && !hwidArray.includes(hwid)) {
     hwidArray.push(hwid);
     res.json({ message: 'HWID added successfully.' });
