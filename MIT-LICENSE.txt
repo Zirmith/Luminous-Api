@@ -1,0 +1,15 @@
+Copyright (c) 2012-2023 Aparri
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+In this version, the emphasis is on Luminous VR being an upcoming application, and the instructions and features mentioned reflect that fact. As the application progresses and features are implemented, you can update the `README.md` file accordingly.
+
+Feel free to adjust the content and structure as needed to align with your project's vision and goals.
+
+Let me know if there's anything else I can assist you with!
