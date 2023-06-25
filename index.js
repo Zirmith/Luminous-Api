@@ -38,20 +38,21 @@ app.post('/api/hwids', (req, res) => {
 });
 
 // Route to whitelist a HWID
-// Route to whitelist a HWID
+
 app.put('/api/hwids/whitelist', (req, res) => {
   const { hwid } = req.body;
 
   if (hwid && hwidArray.includes(hwid)) {
     // Remove the HWID from the array if it's already blacklisted
-    const blacklistIndex = blacklistedArray.indexOf(hwid);
+    const blacklistIndex = blacklistedArray.findIndex(item => item.hwid === hwid);
     if (blacklistIndex > -1) {
       blacklistedArray.splice(blacklistIndex, 1);
     }
 
     // Add the HWID to the whitelist if it's not already whitelisted
-    if (!whitelistedArray.includes(hwid)) {
-      whitelistedArray.push(hwid);
+    const whitelistIndex = whitelistedArray.findIndex(item => item.hwid === hwid);
+    if (whitelistIndex === -1) {
+      whitelistedArray.push({ hwid });
     }
 
     res.json({ message: 'HWID whitelisted successfully.' });
