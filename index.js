@@ -156,12 +156,20 @@ app.delete('/api/hwids/:hwid', (req, res) => {
   if (hwid && hwidArray.includes(hwid)) {
     const index = hwidArray.indexOf(hwid);
     hwidArray.splice(index, 1);
+
+    // Remove the HWID from the whitelist if it's whitelisted
+    const whitelistIndex = whitelistedArray.findIndex(item => item.hwid === hwid);
+    if (whitelistIndex > -1) {
+      whitelistedArray.splice(whitelistIndex, 1);
+    }
+
     delete hwidAddedTimes[hwid];
     res.json({ message: 'HWID deleted successfully.' });
   } else {
     res.status(400).json({ error: 'Invalid HWID or HWID not found.' });
   }
 });
+
 
 app.get('/', (req, res) => {
   res.redirect('/api/version');
