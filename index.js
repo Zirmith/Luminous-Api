@@ -61,8 +61,9 @@ app.put('/api/hwids/whitelist', (req, res) => {
 });
 
 // Route to blacklist a HWID
+// Route to blacklist a HWID with reason, custom code, and staff name
 app.put('/api/hwids/blacklist', (req, res) => {
-  const { hwid } = req.body;
+  const { hwid, reason, customCode, staffName } = req.body;
 
   if (hwid && hwidArray.includes(hwid)) {
     // Remove the HWID from the array if it's already whitelisted
@@ -71,9 +72,9 @@ app.put('/api/hwids/blacklist', (req, res) => {
       whitelistedArray.splice(whitelistIndex, 1);
     }
 
-    // Add the HWID to the blacklist if it's not already blacklisted
-    if (!blacklistedArray.includes(hwid)) {
-      blacklistedArray.push(hwid);
+    // Add the HWID to the blacklist with reason, custom code, and staff name
+    if (!blacklistedArray.some(item => item.hwid === hwid)) {
+      blacklistedArray.push({ hwid, reason, customCode, staffName });
     }
 
     res.json({ message: 'HWID blacklisted successfully.' });
@@ -81,6 +82,7 @@ app.put('/api/hwids/blacklist', (req, res) => {
     res.status(400).json({ error: 'Invalid HWID or HWID not found.' });
   }
 });
+
 
 
 // Route to check if a HWID is whitelisted or blacklisted
@@ -91,12 +93,18 @@ app.get('/api/hwids/check', (req, res) => {
   console.log('Received HWID:', hwid);
 
   if (hwid) {
-    if (whitelistedArray.includes(hwid)) {
+    if (whitelistedArray.some(item => item.hwid === hwid)) {
+      const whitelistItem = whitelistedArray.find(item => item.hwid === hwid);
       console.log('HWID found in whitelist:', hwid);
-      res.json({ state: 'whitelisted' });
-    } else if (blacklistedArray.includes(hwid)) {
+      res.json({ state: 'whitelisted', reason: whitelistItem.reason, customCode: whitelistItem.customCode, staffName: whitelistItem.staffName });
+    } else if (blacklistedArray.some(item => item.hwid === hwid)) {
+      const blacklistItem = blacklistedArray.find(item => item.hwid === hwid);
       console.log('HWID found in blacklist:', hwid);
-      res.json({ state: 'blacklisted' });
+      const response = { state: 'blacklisted' };
+      if (blacklistItem.reason) response.reason = blacklistItem.reason;
+      if (blacklistItem.customCode) response.customCode = blacklistItem.customCode;
+      if (blacklistItem.staffName) response.staffName = blacklistItem.staffName;
+      res.json(response);
     } else {
       console.log('HWID not found:', hwid);
       res.json({ state: 'not_found' });
@@ -106,6 +114,7 @@ app.get('/api/hwids/check', (req, res) => {
     res.status(400).json({ error: 'Invalid HWID.' });
   }
 });
+
 
 
 
