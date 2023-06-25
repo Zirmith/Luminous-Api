@@ -1,8 +1,7 @@
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
 const app = express();
 const port = 3000;
-
 
 app.use(cors());
 app.use(express.json());
@@ -28,9 +27,8 @@ app.get('/api/hwids', (req, res) => {
 
 // Route to add a new HWID
 app.post('/api/hwids', (req, res) => {
-
   const { hwid } = req.body;
-  console.log(`Got a hwid of:  ${hwid}`)
+  
   if (hwid && !hwidArray.includes(hwid)) {
     hwidArray.push(hwid);
     res.json({ message: 'HWID added successfully.' });
@@ -100,7 +98,18 @@ app.get('/api/hwids/check', (req, res) => {
   }
 });
 
+// Route to delete an HWID
+app.delete('/api/hwids/:hwid', (req, res) => {
+  const hwid = req.params.hwid;
 
+  if (hwid && hwidArray.includes(hwid)) {
+    const index = hwidArray.indexOf(hwid);
+    hwidArray.splice(index, 1);
+    res.json({ message: 'HWID deleted successfully.' });
+  } else {
+    res.status(400).json({ error: 'Invalid HWID or HWID not found.' });
+  }
+});
 
 app.get("/", (req, res) => {
   res.redirect('/api/version');
