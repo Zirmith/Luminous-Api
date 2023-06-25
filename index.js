@@ -5,6 +5,16 @@ const port = 3000;
 // Array to store HWIDs
 const hwidArray = [];
 
+
+// Define a route for checking the Luminous API version
+app.get('/api/version', (req, res) => {
+    // Simulate the version retrieval
+    const version = '1.0.0';
+  
+    res.json({ version });
+  });
+  
+
 // Route to get all HWIDs
 app.get('/api/hwids', (req, res) => {
   res.json({ hwids: hwidArray });
@@ -55,6 +65,11 @@ app.put('/api/hwids/blacklist', (req, res) => {
     res.status(400).json({ error: 'Invalid HWID or HWID not found.' });
   }
 });
+
+
+app.get("/", (req, res) => {
+    res.redirect('/api/version');
+})
 
 // Start the server
 app.listen(port, () => {
