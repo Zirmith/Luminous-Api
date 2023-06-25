@@ -38,6 +38,7 @@ app.post('/api/hwids', (req, res) => {
 });
 
 // Route to whitelist a HWID
+// Route to whitelist a HWID
 app.put('/api/hwids/whitelist', (req, res) => {
   const { hwid } = req.body;
 
@@ -80,6 +81,7 @@ app.put('/api/hwids/blacklist', (req, res) => {
     res.status(400).json({ error: 'Invalid HWID or HWID not found.' });
   }
 });
+
 
 // Route to check if a HWID is whitelisted or blacklisted
 
