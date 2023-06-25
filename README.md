@@ -23,4 +23,4 @@ As Luminous VR is currently in development, the following steps will be relevant
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/luminous-vr.git
+   git clone [stuff](https://github.com/Zirmith/Luminous-Api.git)https://github.com/Zirmith/Luminous-Api.git
