@@ -1,15 +1,20 @@
 const express = require('express');
 const cors = require('cors');
-const { body, query, validationResult } = require('express-validator');
-const xss = require('xss');
 const rateLimit = require('express-rate-limit');
-
 const app = express();
 const port = 3000;
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+
+// Rate limiting configuration
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Max requests per window
+});
+app.use(limiter);
 
 // Array to store HWIDs
 const hwidArray = [];
@@ -25,28 +30,14 @@ app.get('/api/version', (req, res) => {
   res.json({ version });
 });
 
-// Rate limiting configuration
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Max requests per window
-});
-app.use(limiter);
-
 // Route to get all HWIDs
 app.get('/api/hwids', (req, res) => {
   res.json({ hwids: hwidArray });
 });
 
 // Route to add a new HWID
-app.post('/api/hwids', [
-  body('hwid').notEmpty().isString().trim(),
-], (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const hwid = xss(req.body.hwid);
+app.post('/api/hwids', (req, res) => {
+  const { hwid } = req.body;
 
   if (hwid && !hwidArray.includes(hwid)) {
     hwidArray.push(hwid);
@@ -75,15 +66,8 @@ app.post('/api/hwids', [
 });
 
 // Route to whitelist a HWID
-app.put('/api/hwids/whitelist', [
-  body('hwid').notEmpty().isString().trim(),
-], (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const hwid = xss(req.body.hwid);
+app.put('/api/hwids/whitelist', (req, res) => {
+  const { hwid } = req.body;
 
   if (hwid && hwidArray.includes(hwid)) {
     // Remove the HWID from the array if it's already blacklisted
@@ -105,21 +89,8 @@ app.put('/api/hwids/whitelist', [
 });
 
 // Route to blacklist a HWID
-app.put('/api/hwids/blacklist', [
-  body('hwid').notEmpty().isString().trim(),
-  body('reason').optional().isString().trim(),
-  body('customCode').optional().isString().trim(),
-  body('staffName').optional().isString().trim(),
-], (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const hwid = xss(req.body.hwid);
-  const reason = xss(req.body.reason);
-  const customCode = xss(req.body.customCode);
-  const staffName = xss(req.body.staffName);
+app.put('/api/hwids/blacklist', (req, res) => {
+  const { hwid, reason, customCode, staffName } = req.body;
 
   if (hwid && hwidArray.includes(hwid)) {
     // Remove the HWID from the array if it's already whitelisted
@@ -141,15 +112,8 @@ app.put('/api/hwids/blacklist', [
 });
 
 // Route to check if a HWID is whitelisted or blacklisted
-app.get('/api/hwids/check', [
-  query('hwid').notEmpty().isString().trim(),
-], (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const hwid = xss(req.query.hwid);
+app.get('/api/hwids/check', (req, res) => {
+  const hwid = req.query.hwid;
 
   console.log('Received HWID:', hwid);
 
@@ -214,6 +178,7 @@ app.delete('/api/hwids/:hwid', (req, res) => {
     res.status(400).json({ error: 'Invalid HWID or HWID not found.' });
   }
 });
+
 
 app.get('/', (req, res) => {
   res.redirect('/api/version');
