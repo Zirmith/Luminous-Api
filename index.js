@@ -1,25 +1,15 @@
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const { body, query, validationResult } = require('express-validator');
 const xss = require('xss');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const port = 3000;
 
-// Apply middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(helmet());
-
-// Apply rate limiting middleware
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-});
-app.use(limiter);
 
 // Array to store HWIDs
 const hwidArray = [];
@@ -34,6 +24,13 @@ app.get('/api/version', (req, res) => {
 
   res.json({ version });
 });
+
+// Rate limiting configuration
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Max requests per window
+});
+app.use(limiter);
 
 // Route to get all HWIDs
 app.get('/api/hwids', (req, res) => {
@@ -217,7 +214,6 @@ app.delete('/api/hwids/:hwid', (req, res) => {
     res.status(400).json({ error: 'Invalid HWID or HWID not found.' });
   }
 });
-
 
 app.get('/', (req, res) => {
   res.redirect('/api/version');
