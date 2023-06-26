@@ -24,8 +24,7 @@ As Luminous VR is currently in development, the following steps will be relevant
    git clone (https://github.com/Zirmith/Luminous-Api.git)https://github.com/Zirmith/Luminous-Api.git)
 
 
-- 
-[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/luminous-vr)
+ [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/luminous-vr)
 
 
 
