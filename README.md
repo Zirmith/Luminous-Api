@@ -26,3 +26,13 @@ As Luminous VR is currently in development, the following steps will be relevant
 
 ## Frequently Asked Questions (FAQ)
 
+**Q: What should I do if I encounter "HWID state: not_found" error?**
+A: If you encounter the "HWID state: not_found" error, you can follow these steps to resolve it:
+
+1.Open the Luminous VR application.
+2.Go to the menu and select "Cache."
+3.Click on "Clear HWID Status Cache" to clear the cache.
+4.Restart the application.
+5.This should resolve the "HWID state: not_found" error and allow you to proceed.
+
+![HWID state: not_found]("https://raw.githubusercontent.com/Zirmith/Luminous-Api/main/images/Screen%20Shot%202023-06-26%20at%207.10.02%20AM.png")
