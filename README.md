@@ -22,3 +22,7 @@ As Luminous VR is currently in development, the following steps will be relevant
 
    ```bash
    git clone (https://github.com/Zirmith/Luminous-Api.git)https://github.com/Zirmith/Luminous-Api.git)
+
+
+## Frequently Asked Questions (FAQ)
+
