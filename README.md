@@ -37,7 +37,7 @@ Feel free to customize the answer further based on any additional details or spe
 **Q: What should I do if I encounter "HWID state: not_found" error?**
 A: If you encounter the "HWID state: not_found" error, you can follow these steps to resolve it:
 
-![HWID state: not_found](https://raw.githubusercontent.com/Zirmith/Luminous-Api/main/images/Screen%20Shot%202023-06-26%20at%207.10.02%20AM.png)
+![HWID state: not_found](https://raw.githubusercontent.com/Zirmith/Luminous-Api/main/images/Screen%20Shot%202023-06-26%20at%207.37.47%20AM.png)
 
 - 1. Open the Luminous VR application.
 - 2. Navigate to the menu and locate the "Cache" option.
@@ -56,7 +56,7 @@ If the error persists after following these steps, you may need to reach out to 
 **Q: What should I do if I encounter the "Error: Unable to add HWID or HWID already exists" message?**
 A: If you encounter the "Error: Unable to add HWID or HWID already exists" message, you can follow these steps to troubleshoot the issue:
 
-![HWID state: not_found](https://raw.githubusercontent.com/Zirmith/Luminous-Api/main/images/Screen%20Shot%202023-06-26%20at%207.10.02%20AM.png)
+![HWID state: not_found](https://raw.githubusercontent.com/Zirmith/Luminous-Api/main/images/Screen%20Shot%202023-06-26%20at%207.36.44%20AM.png)
 
 - 1. Verify HWID: Double-check that the hardware identification (HWID) you provided is correct. Ensure that there are no typos or errors in the HWID you entered.
 
