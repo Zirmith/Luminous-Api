@@ -26,6 +26,14 @@ As Luminous VR is currently in development, the following steps will be relevant
 
 ## Frequently Asked Questions (FAQ)
 
+
+**Q: How long does the whitelist process take?**
+
+A: The whitelist process typically takes around 5 minutes to complete. During this time, your hardware identification (HWID) is being checked and validated to ensure it meets the necessary criteria for accessing Luminous VR features. The duration may vary slightly depending on server load and network conditions. Please be patient and allow the process to complete. If the whitelist process takes longer than expected or if you encounter any issues, please contact the Luminous VR support team for further assistance.
+
+Feel free to customize the answer further based on any additional details or specifications related to the whitelist process in Luminous VR.
+
+
 **Q: What should I do if I encounter "HWID state: not_found" error?**
 A: If you encounter the "HWID state: not_found" error, you can follow these steps to resolve it:
 
