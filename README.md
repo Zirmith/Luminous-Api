@@ -1,6 +1,8 @@
 # Luminous VR (Upcoming)
+ [![luminous-vr](https://snapcraft.io/luminous-vr/badge.svg)](https://snapcraft.io/luminous-vr)
+ [![luminous-vr](https://snapcraft.io/luminous-vr/trending.svg?name=0)](https://snapcraft.io/luminous-vr)
 
-![Luminous VR Logo](logo.png)
+ ![Luminous VR Logo](logo.png)
 
 Luminous VR is an upcoming virtual reality application that aims to provide a seamless and immersive VR experience with a range of exciting features and functionalities.
 
@@ -18,10 +20,7 @@ Luminous VR is an upcoming virtual reality application that aims to provide a se
 
 As Luminous VR is currently in development, the following steps will be relevant once the application is released:
 
-1. Clone the repository:
 
-   ```bash
-   git clone (https://github.com/Zirmith/Luminous-Api.git)https://github.com/Zirmith/Luminous-Api.git)
 
 
 ## Frequently Asked Questions (FAQ)
