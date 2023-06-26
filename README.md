@@ -35,4 +35,4 @@ A: If you encounter the "HWID state: not_found" error, you can follow these step
 4.Restart the application.
 5.This should resolve the "HWID state: not_found" error and allow you to proceed.
 
-![HWID state: not_found]("https://raw.githubusercontent.com/Zirmith/Luminous-Api/main/images/Screen%20Shot%202023-06-26%20at%207.10.02%20AM.png")
+![HWID state: not_found](https://raw.githubusercontent.com/Zirmith/Luminous-Api/main/images/Screen%20Shot%202023-06-26%20at%207.10.02%20AM.png)
