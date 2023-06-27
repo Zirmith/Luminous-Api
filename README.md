@@ -1,6 +1,5 @@
 # Luminous VR (Upcoming)
- [![luminous-vr](https://snapcraft.io/luminous-vr/badge.svg)](https://snapcraft.io/luminous-vr)
- [![luminous-vr](https://snapcraft.io/luminous-vr/trending.svg?name=0)](https://snapcraft.io/luminous-vr)
+
 
  ![Luminous VR Logo](logo.png)
 
