@@ -1,12 +1,21 @@
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
 const app = express();
 const port = 3000;
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+
+// Create a proxy middleware to forward requests to UptimeRobot
+const proxyOptions = {
+  target: 'https://stats.uptimerobot.com/jWD0pilnPj',
+  changeOrigin: true,
+};
 
 
 // Rate limiting configuration
@@ -181,9 +190,16 @@ app.delete('/api/hwids/:hwid', (req, res) => {
 
 
 app.get('/', (req, res) => {
-  res.redirect('/api/version');
+  res.redirect('/api/status');
 });
 
+const uptimeRobotProxy = createProxyMiddleware(proxyOptions);
+
+// Define a GET route for '/api/status' that proxies the request to UptimeRobot
+app.get('/api/status', (req, res) => {
+ uptimeRobotProxy(req, res);
+ res.redirect('https://stats.uptimerobot.com/jWD0pilnPj');
+});
 // Start the server
 app.listen(port, () => {
   console.log(`Luminous API is running on http://localhost:${port}`);
