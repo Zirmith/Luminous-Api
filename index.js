@@ -68,11 +68,32 @@ app.post('/api/hwids', (req, res) => {
       }
 
       console.log(`HWID ${hwid} whitelisted automatically after 5 minutes.`);
+
+      // Send the HWID and status to the backup API
+      // Replace the API_URL with the actual URL of your backup API
+      const backupApiUrl = 'https://luminous-backups.onrender.com/backups';
+      const backupApiOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ hwid, status: true }), // Assuming status is set to true for whitelisted HWIDs
+      };
+
+      fetch(backupApiUrl, backupApiOptions)
+        .then(response => response.json())
+        .then(data => {
+          // Handle the response from the backup API if necessary
+        })
+        .catch(error => {
+          console.error('Error sending data to backup API:', error);
+        });
     }, 5 * 60 * 1000); // 5 minutes in milliseconds
   } else {
     res.status(400).json({ error: 'Invalid HWID or HWID already exists.' });
   }
 });
+
 
 // Route to whitelist a HWID
 app.put('/api/hwids/whitelist', (req, res) => {
@@ -194,6 +215,63 @@ app.get('/', (req, res) => {
 });
 
 const uptimeRobotProxy = createProxyMiddleware(proxyOptions);
+
+
+app.post('/api/backups', (req, res) => {
+  const { hwid, status } = req.body;
+
+  if (hwid && typeof status === 'boolean') {
+    // Send the HWID and status to the backup API
+    // Replace the API_URL with the actual URL of your backup API
+    const backupApiUrl = 'https://luminous-backups.onrender.com/backups';
+    const backupApiOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ hwid, status }),
+    };
+
+    fetch(backupApiUrl, backupApiOptions)
+      .then(response => response.json())
+      .then(data => {
+        if (data.found) {
+          // HWID found in the backup API
+          res.json({ message: 'HWID found in backup API.' });
+        } else {
+          // HWID not found in the backup API
+          // Add the HWID to the hwidArray and determine if it should be whitelisted or blacklisted
+          if (!hwidArray.includes(hwid)) {
+            hwidArray.push(hwid);
+            hwidAddedTimes[hwid] = Date.now();
+          }
+          
+          if (status) {
+            // Whitelist the HWID
+            const whitelistIndex = whitelistedArray.findIndex(item => item.hwid === hwid);
+            if (whitelistIndex === -1) {
+              whitelistedArray.push({ hwid });
+            }
+            res.json({ message: 'HWID added and whitelisted successfully.' });
+          } else {
+            // Blacklist the HWID
+            const blacklistIndex = blacklistedArray.findIndex(item => item.hwid === hwid);
+            if (blacklistIndex === -1) {
+              blacklistedArray.push({ hwid });
+            }
+            res.json({ message: 'HWID added and blacklisted successfully.' });
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error sending data to backup API:', error);
+        res.status(500).json({ error: 'Internal server error.' });
+      });
+  } else {
+    res.status(400).json({ error: 'Invalid HWID or status.' });
+  }
+});
+
 
 // Define a GET route for '/api/status' that proxies the request to UptimeRobot
 app.get('/api/status', (req, res) => {
