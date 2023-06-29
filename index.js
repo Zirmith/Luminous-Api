@@ -34,7 +34,7 @@ const hwidAddedTimes = {};
 // Define a route for checking the Luminous API version
 app.get('/api/version', (req, res) => {
   // Simulate the version retrieval
-  const version = '1.2.2';
+  const version = '1.2.5';
 
   res.json({ version });
 });
