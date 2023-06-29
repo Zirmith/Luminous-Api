@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const fetch = require('fetch');
+const axios = require('axios');
 const app = express();
 const port = 3000;
 
@@ -54,7 +54,7 @@ app.post('/api/hwids', (req, res) => {
     res.json({ message: 'HWID added successfully.' });
 
     // Automatically whitelist the HWID after 5 minutes
-    setTimeout(() => {
+    setTimeout(async () => {
       // Remove the HWID from the array if it's already blacklisted
       const blacklistIndex = blacklistedArray.findIndex(item => item.hwid === hwid);
       if (blacklistIndex > -1) {
@@ -69,25 +69,18 @@ app.post('/api/hwids', (req, res) => {
 
       console.log(`HWID ${hwid} whitelisted automatically after 5 minutes.`);
 
-      // Send the HWID and status to the backup API
-      // Replace the API_URL with the actual URL of your backup API
-      const backupApiUrl = 'https://luminous-backups.onrender.com/backups';
-      const backupApiOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ hwid, status: true }), // Assuming status is set to true for whitelisted HWIDs
-      };
+      try {
+        // Send the HWID and status to the backup API
+        // Replace the API_URL with the actual URL of your backup API
+        const backupApiUrl = 'https://luminous-backups.onrender.com/backups';
+        const backupApiPayload = { hwid, status: true }; // Assuming status is set to true for whitelisted HWIDs
 
-      fetch(backupApiUrl, backupApiOptions)
-        .then(response => response.json())
-        .then(data => {
-          // Handle the response from the backup API if necessary
-        })
-        .catch(error => {
-          console.error('Error sending data to backup API:', error);
-        });
+        const response = await axios.post(backupApiUrl, backupApiPayload);
+        // Handle the response from the backup API if necessary
+        console.log('Response from backup API:', response.data);
+      } catch (error) {
+        console.error('Error sending data to backup API:', error);
+      }
     }, 5 * 60 * 1000); // 5 minutes in milliseconds
   } else {
     res.status(400).json({ error: 'Invalid HWID or HWID already exists.' });
